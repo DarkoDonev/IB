@@ -1,0 +1,16 @@
+<div class="login-container">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <h2>Login</h2>
+
+    <div class="form-group">
+      <label for="tfa">TFA Code</label>
+      <input
+        id="tfa"
+        type="password"
+        formControlName="tfa"
+        class="form-control"
+        placeholder="Enter the TFA Code"
+      />
+    </div>
+  </form>
+</div>
