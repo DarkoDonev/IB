@@ -1,5 +1,7 @@
 import {Sequelize} from "sequelize-typescript";
 import User from "./models/User";
+import UserResourcePermission from "./models/UserResourcePermission";
+import Todo from "./models/Todo";
 
 
 const sequelizeConnection = new Sequelize({
@@ -10,7 +12,7 @@ const sequelizeConnection = new Sequelize({
     username: 'root',
     password: 'Darko123',
     models: [
-        User
+        User, UserResourcePermission, Todo
     ],
     dialectOptions: {
         connectTimeout: 15000

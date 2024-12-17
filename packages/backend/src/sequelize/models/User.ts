@@ -45,6 +45,12 @@ export default class User extends Model<User> {
     })
     declare password: string;
 
+    @Column({
+        type: DataType.STRING,
+        allowNull: false
+    })
+    declare role: string;
+
     @CreatedAt
     @Column({
         type: DataType.DATE,

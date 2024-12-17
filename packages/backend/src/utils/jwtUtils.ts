@@ -23,8 +23,5 @@ export function createToken(user: any) {
 }
 
 export async function comparePassword(password: string, hash: string) {
-    console.log(password)
-    console.log(hash)
     return bcrypt.compare(password, hash)
-    // return passToHash == hash
 }

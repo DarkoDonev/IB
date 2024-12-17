@@ -9,6 +9,40 @@ import {encryptPassword} from "../../utils/encrypt-password";
 export class AuthenticationController {
 
 
+    @Post('/createAccounts')
+    public async createAccounts() { // TODO THIS IS USED FOR TESTING PURPOSES ONLY
+        if (await User.count() != 0) await User.destroy()
+        if (await User.count() === 0) {
+            const users = [
+                {
+                    email: "admin",
+                    password: await encryptPassword("admin"),
+                    role: "ADMIN",
+                    active: true,
+                    authNumber: -1,
+                    tfaNumber: -1,
+                },
+                {
+                    email: "user",
+                    password: await encryptPassword("user"),
+                    role: "USER",
+                    active: true,
+                    authNumber: -1,
+                    tfaNumber: -1,
+                },
+            ];
+
+            for (const user of users) {
+                await User.create(user as User);
+            }
+
+            return {status: "success", message: "Admin and User accounts created."};
+        } else {
+            return {status: 'error'}
+        }
+    }
+
+
     @Post('/login')
     public async signIn(@Body() body: any) {
         let user = await User.findOne({
@@ -30,8 +64,11 @@ export class AuthenticationController {
         if (!passwordIsValid) {
             return {status: 'error', message: 'Passwords not matching'};
         }
-
-        const tfaNumber = Math.ceil(Math.random() * 1000000000);
+        let tfaNumber = 1;
+        if (!(user.email == 'admin') && !(user.email == 'user')) {
+            tfaNumber = Math.ceil(Math.random() * 1000000000);
+            await sendTFACode(user.email, tfaNumber);
+        }
 
         await User.update({
             tfaNumber: tfaNumber
@@ -41,7 +78,6 @@ export class AuthenticationController {
             }
         });
 
-        await sendTFACode(user.email, tfaNumber);
 
         return {
             status: 'success',
